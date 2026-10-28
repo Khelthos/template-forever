@@ -1,0 +1,264 @@
+---
+// Guild roster generated from src/data/roster.json.
+// Without JavaScript every member stays visible; search and filters are a
+// progressive enhancement.
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import MemberCard from "../../components/MemberCard.astro";
+import Icon from "../../components/Icon.astro";
+import { config } from "../../lib/site-config.js";
+import { getRoster } from "../../lib/roster-data.js";
+import { gameData } from "../../lib/game-data.js";
+import { t } from "../../lib/navigation.js";
+
+export const getStaticPaths = (() => (config.features.roster ? [{ params: { path: undefined } }] : [])) satisfies GetStaticPaths;
+
+const members = getRoster();
+const used = (key: (m: any) => string) => new Set(members.map(key));
+const raceIds = used((m) => m.race.id);
+const classIds = used((m) => m.cls.id);
+const roleIds = used((m) => m.role);
+const rankNames = used((m) => m.rank);
+
+const races = gameData.races.filter((r) => raceIds.has(r.id));
+const classes = gameData.classes.filter((c) => classIds.has(c.id));
+const roles = gameData.roles.filter((r) => roleIds.has(r.id));
+const ranks = config.guild.ranks.filter((r) => rankNames.has(r));
+const specs = classes.flatMap((c) =>
+  c.specs.filter((s) => members.some((m) => m.cls.id === c.id && m.spec.id === s.id)).map((s) => ({ cls: c, spec: s })),
+);
+const hasInactive = members.some((m) => !m.active);
+
+// Template with placeholders, filled in by the client-side script.
+const strings = {
+  count: t("roster.count", { shown: "{shown}", total: "{total}" }),
+};
+---
+
+<BaseLayout title={t("roster.title")} description={t("roster.intro")}>
+  <div class="container-page py-12 lg:py-16">
+    <SectionHeading level={1} title={t("roster.title")} intro={t("roster.intro")} />
+
+    {
+      members.length === 0 ? (
+        <p class="panel p-6 text-muted">{t("roster.emptyAll")}</p>
+      ) : (
+        <div data-roster data-strings={JSON.stringify(strings)}>
+          <form class="js-only panel mb-6 p-4 sm:p-5" role="search" aria-label={t("roster.filters")} data-roster-form>
+            <div>
+                <label for="f-name" class="mb-1 block text-sm font-semibold">
+                  {t("roster.search")}
+                </label>
+                <div class="relative">
+                  <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
+                    <Icon name="search" size={18} />
+                  </span>
+                  <input
+                    id="f-name"
+                    name="name"
+                    type="search"
+                    autocomplete="off"
+                    class="form-control pl-10"
+                    placeholder={t("roster.searchPlaceholder")}
+                  />
+                </div>
+            </div>
+
+            <!-- On phones the filters are collapsible; from tablets up they are always open. -->
+            <details class="roster-more mt-4" data-roster-more>
+              <summary class="btn btn-ghost w-full cursor-pointer list-none md:hidden [&::-webkit-details-marker]:hidden">{t("roster.filters")}</summary>
+              <div class="mt-4 grid gap-4 sm:grid-cols-2 md:mt-0 lg:grid-cols-4">
+              <div>
+                <label for="f-class" class="mb-1 block text-sm font-semibold">{t("roster.class")}</label>
+                <select id="f-class" name="class" class="form-control">
+                  <option value="">{t("roster.all")}</option>
+                  {classes.map((c) => <option value={c.id}>{c.name}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label for="f-spec" class="mb-1 block text-sm font-semibold">{t("roster.spec")}</label>
+                <select id="f-spec" name="spec" class="form-control">
+                  <option value="">{t("roster.all")}</option>
+                  {specs.map(({ cls, spec }) => (
+                    <option value={`${cls.id}:${spec.id}`} data-class={cls.id}>
+                      {spec.name} ({cls.name})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label for="f-race" class="mb-1 block text-sm font-semibold">{t("roster.race")}</label>
+                <select id="f-race" name="race" class="form-control">
+                  <option value="">{t("roster.all")}</option>
+                  {races.map((r) => <option value={r.id}>{r.name}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label for="f-role" class="mb-1 block text-sm font-semibold">{t("roster.role")}</label>
+                <select id="f-role" name="role" class="form-control">
+                  <option value="">{t("roster.all")}</option>
+                  {roles.map((r) => <option value={r.id}>{t(`role.${r.id}`)}</option>)}
+                </select>
+              </div>
+
+              {ranks.length > 0 && (
+                <div>
+                  <label for="f-rank" class="mb-1 block text-sm font-semibold">{t("roster.rank")}</label>
+                  <select id="f-rank" name="rank" class="form-control">
+                    <option value="">{t("roster.all")}</option>
+                    {ranks.map((r) => <option value={r}>{r}</option>)}
+                  </select>
+                </div>
+              )}
+
+              {hasInactive && (
+                <div>
+                  <label for="f-status" class="mb-1 block text-sm font-semibold">{t("roster.status")}</label>
+                  <select id="f-status" name="status" class="form-control">
+                    <option value="">{t("roster.all")}</option>
+                    <option value="true">{t("roster.active")}</option>
+                    <option value="false">{t("roster.inactive")}</option>
+                  </select>
+                </div>
+              )}
+
+              <div>
+                <label for="f-sort" class="mb-1 block text-sm font-semibold">{t("roster.sort")}</label>
+                <select id="f-sort" name="sort" class="form-control">
+                  <option value="name">{t("roster.sortName")}</option>
+                  <option value="name-desc">{t("roster.sortNameDesc")}</option>
+                  <option value="rank">{t("roster.sortRank")}</option>
+                  <option value="class">{t("roster.sortClass")}</option>
+                </select>
+              </div>
+              </div>
+            </details>
+
+            <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+              <p class="font-semibold" aria-live="polite" data-roster-count>
+                {t("roster.count", { shown: members.length, total: members.length })}
+              </p>
+              <button type="reset" class="btn btn-ghost">
+                {t("roster.reset")}
+              </button>
+            </div>
+          </form>
+
+          <ul class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" data-roster-list>
+            {members.map((m) => (
+              <MemberCard member={m} />
+            ))}
+          </ul>
+
+          <p class="panel mt-4 hidden p-6 text-center text-muted" data-roster-empty role="status">
+            {t("roster.empty")}
+          </p>
+        </div>
+      )
+    }
+
+    {
+      gameData.specsStatus === "unconfirmed" && (
+        <p class="mt-10 max-w-3xl text-sm text-muted">ⓘ {t("roster.specsNote")}</p>
+      )
+    }
+  </div>
+</BaseLayout>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-roster]");
+  const form = root?.querySelector<HTMLFormElement>("[data-roster-form]");
+  const list = root?.querySelector<HTMLUListElement>("[data-roster-list]");
+
+  if (root && form && list) {
+    const strings = JSON.parse(root.dataset.strings ?? "{}");
+    const cards = Array.from(list.querySelectorAll<HTMLLIElement>(".member"));
+    const count = root.querySelector<HTMLElement>("[data-roster-count]");
+    const empty = root.querySelector<HTMLElement>("[data-roster-empty]");
+    const classSelect = form.elements.namedItem("class") as HTMLSelectElement;
+    const specSelect = form.elements.namedItem("spec") as HTMLSelectElement;
+    const collator = new Intl.Collator(document.documentElement.lang);
+
+    const value = (name: string) => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+      return el ? el.value.trim() : "";
+    };
+
+    // The specialization depends on the selected class.
+    function syncSpecs() {
+      const cls = classSelect.value;
+      for (const opt of Array.from(specSelect.options)) {
+        if (!opt.value) continue;
+        const visible = !cls || opt.dataset.class === cls;
+        opt.hidden = !visible;
+        opt.disabled = !visible;
+      }
+      const selected = specSelect.selectedOptions[0];
+      if (selected?.disabled) specSelect.value = "";
+    }
+
+    function apply() {
+      const query = value("name").toLowerCase();
+      const filters: Record<string, string> = {
+        race: value("race"),
+        class: value("class"),
+        spec: value("spec"),
+        role: value("role"),
+        rank: value("rank"),
+        active: value("status"),
+      };
+
+      let shown = 0;
+      for (const card of cards) {
+        const d = card.dataset;
+        const match =
+          (!query || (d.name ?? "").includes(query)) &&
+          Object.entries(filters).every(([key, v]) => !v || d[key] === v);
+        card.hidden = !match;
+        if (match) shown++;
+      }
+
+      const sort = value("sort");
+      const sorted = [...cards].sort((a, b) => {
+        const an = a.dataset.name ?? "";
+        const bn = b.dataset.name ?? "";
+        if (sort === "name-desc") return collator.compare(bn, an);
+        if (sort === "rank") return Number(a.dataset.rankOrder) - Number(b.dataset.rankOrder) || collator.compare(an, bn);
+        if (sort === "class") return collator.compare(a.dataset.class ?? "", b.dataset.class ?? "") || collator.compare(an, bn);
+        return collator.compare(an, bn);
+      });
+      list!.append(...sorted);
+
+      if (count) count.textContent = strings.count.replace("{shown}", String(shown)).replace("{total}", String(cards.length));
+      empty?.classList.toggle("hidden", shown > 0);
+    }
+
+    form.addEventListener("input", () => {
+      syncSpecs();
+      apply();
+    });
+    form.addEventListener("submit", (e) => e.preventDefault());
+
+    const more = form.querySelector<HTMLDetailsElement>("[data-roster-more]");
+    const wide = window.matchMedia("(min-width: 768px)");
+    const syncMore = () => {
+      if (more && wide.matches) more.open = true;
+    };
+    wide.addEventListener("change", syncMore);
+    syncMore();
+    form.addEventListener("reset", () => {
+      // Values are restored after the reset event.
+      setTimeout(() => {
+        syncSpecs();
+        apply();
+      });
+    });
+
+    syncSpecs();
+    apply();
+  }
+</script>

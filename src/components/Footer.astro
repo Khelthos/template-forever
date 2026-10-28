@@ -1,0 +1,96 @@
+---
+// Footer with two areas: guild information and template attribution.
+// The attribution is mandatory (see ATTRIBUTION.md): do not remove it.
+import Icon from "./Icon.astro";
+import FactionEmblem from "./FactionEmblem.astro";
+import { config, template } from "../lib/site-config.js";
+import { navItems, socialLinks, t } from "../lib/navigation.js";
+import { href } from "../lib/paths.js";
+
+const { site, guild, footer } = config;
+const socials = socialLinks();
+const icons: Record<string, string> = { discord: "chat", website: "globe", youtube: "play", twitch: "stream" };
+const realm = [guild.server, guild.region].filter(Boolean).join(" · ");
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-16 border-t border-border bg-surface">
+  <div class="container-page py-10">
+    <div class="grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-12">
+      <!-- Guild -->
+      <div class="flex items-start gap-4">
+        <img src={href(site.logo)} alt="" width="56" height="56" class="size-14 shrink-0 object-contain" loading="lazy" />
+        <div class="min-w-0">
+          <p class="font-display text-xl leading-tight text-text">{site.name}</p>
+          <FactionEmblem variant="compact" class="mt-1" />
+          {site.tagline && <p class="mt-3 max-w-md text-muted">{site.tagline}</p>}
+          {realm && <p class="mt-1 text-sm text-muted">{realm}</p>}
+        </div>
+      </div>
+
+      <!-- Links and community -->
+      <div class="flex flex-col gap-6 md:items-end">
+        <nav aria-labelledby="footer-links-title">
+          <h2 id="footer-links-title" class="sr-only">{t("footer.links")}</h2>
+          <ul class="flex flex-wrap gap-x-6 gap-y-2 md:justify-end">
+            {
+              navItems().map((item) => (
+                <li>
+                  <a href={href(item.href)} class="text-muted hover:text-accent">
+                    {item.label}
+                  </a>
+                </li>
+              ))
+            }
+            {
+              footer.links.map((l) => (
+                <li>
+                  <a href={l.url} class="text-muted hover:text-accent" rel="noopener noreferrer">
+                    {l.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </nav>
+
+        {
+          socials.length > 0 && (
+            <div>
+              <h2 class="sr-only">{t("footer.community")}</h2>
+              <ul class="flex flex-wrap gap-2 md:justify-end">
+                {socials.map((s) => (
+                  <li>
+                    <a
+                      href={s.url}
+                      class="inline-flex min-h-10 items-center gap-2 rounded-md border border-border px-3 text-sm text-muted hover:border-accent hover:text-accent"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <Icon name={icons[s.key]} size={16} />
+                      {s.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-border">
+    <div class="container-page space-y-3 py-5 text-sm text-muted">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p>© {year} {site.name}</p>
+        <p data-attribution>
+          {t("footer.poweredBy")}{" "}
+          <a href={template.repositoryUrl} class="link font-semibold" rel="noopener">{template.name}</a>
+          {footer.attributionNote && <span> · {footer.attributionNote}</span>}
+        </p>
+      </div>
+      <p class="text-xs leading-relaxed">{t("footer.disclaimer")}</p>
+    </div>
+  </div>
+</footer>

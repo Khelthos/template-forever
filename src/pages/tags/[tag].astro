@@ -1,0 +1,57 @@
+---
+// Tag page: collects news and guides sharing the same tag.
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import NewsCard from "../../components/NewsCard.astro";
+import GuideCard from "../../components/GuideCard.astro";
+import { config } from "../../lib/site-config.js";
+import { getPublished } from "../../lib/content.js";
+import { t } from "../../lib/navigation.js";
+
+export const getStaticPaths = (async () => {
+  const news = config.features.news ? await getPublished("news") : [];
+  const guides = config.features.guides ? await getPublished("guides") : [];
+  const tags = new Set([...news, ...guides].flatMap((e) => e.data.tags));
+  return [...tags].map((tag) => ({
+    params: { tag },
+    props: {
+      news: news.filter((e) => e.data.tags.includes(tag)),
+      guides: guides.filter((e) => e.data.tags.includes(tag)),
+    },
+  }));
+}) satisfies GetStaticPaths;
+
+const { tag } = Astro.params;
+const { news, guides } = Astro.props;
+---
+
+<BaseLayout title={`#${tag}`} description={`${t("tags.title")} #${tag}`}>
+  <div class="container-page py-12 lg:py-16">
+    <SectionHeading level={1} title={`#${tag}`} intro={`${t("tags.title")} #${tag}`} />
+    {
+      news.length > 0 && (
+        <section aria-labelledby="tag-news" class="mb-12">
+          <h2 id="tag-news" class="mb-5 text-2xl text-text">{t("news.title")}</h2>
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {news.map((entry) => (
+              <NewsCard entry={entry} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+    {
+      guides.length > 0 && (
+        <section aria-labelledby="tag-guides">
+          <h2 id="tag-guides" class="mb-5 text-2xl text-text">{t("guides.title")}</h2>
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {guides.map((entry) => (
+              <GuideCard entry={entry} />
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
+</BaseLayout>

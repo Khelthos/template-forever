@@ -1,0 +1,48 @@
+---
+import Icon from "./Icon.astro";
+import { href } from "../lib/paths.js";
+import { t } from "../lib/navigation.js";
+
+interface Props {
+  current: number;
+  last: number;
+  /** Path of the first page, e.g. "/news/". The following ones: "/news/page/2/". */
+  basePath: string;
+}
+
+const { current, last, basePath } = Astro.props;
+const pageHref = (n: number) => href(n === 1 ? basePath : `${basePath}page/${n}/`);
+---
+
+{
+  last > 1 && (
+    <nav aria-label={t("news.page")} class="mt-10 flex flex-wrap items-center justify-center gap-2">
+      {current > 1 && (
+        <a href={pageHref(current - 1)} class="btn btn-ghost" rel="prev">
+          <Icon name="arrowLeft" size={18} />
+          <span class="sr-only sm:not-sr-only">{t("news.prev")}</span>
+        </a>
+      )}
+      <ol class="flex flex-wrap gap-2">
+        {Array.from({ length: last }, (_, i) => i + 1).map((n) => (
+          <li>
+            <a
+              href={pageHref(n)}
+              class:list={["btn min-w-11 px-3", n === current ? "btn-primary" : "btn-ghost"]}
+              aria-current={n === current ? "page" : undefined}
+            >
+              <span class="sr-only">{t("news.page")} </span>
+              {n}
+            </a>
+          </li>
+        ))}
+      </ol>
+      {current < last && (
+        <a href={pageHref(current + 1)} class="btn btn-ghost" rel="next">
+          <span class="sr-only sm:not-sr-only">{t("news.next")}</span>
+          <Icon name="arrowRight" size={18} />
+        </a>
+      )}
+    </nav>
+  )
+}

@@ -1,0 +1,33 @@
+---
+// Faction indicator: emblem + name (never color alone).
+import Icon from "./Icon.astro";
+import { config } from "../lib/site-config.js";
+import { gameData } from "../lib/game-data.js";
+import { t } from "../lib/navigation.js";
+
+interface Props {
+  variant?: "badge" | "compact";
+  class?: string;
+}
+
+const { variant = "badge", class: className = "" } = Astro.props;
+const faction = gameData.factions.find((f) => f.id === config.guild.faction);
+---
+
+{
+  variant === "compact" ? (
+    <span class={`inline-flex items-center gap-1.5 text-accent ${className}`} title={`${t("faction.label")}: ${faction?.name}`}>
+      <Icon name={config.guild.faction} size={18} />
+      <span class="sr-only">{t("faction.label")}: </span>
+      <span class="text-xs font-semibold uppercase tracking-widest">{faction?.name}</span>
+    </span>
+  ) : (
+    <span
+      class={`inline-flex items-center gap-2 rounded-full border border-hero-accent/60 bg-black/30 px-3 py-1 text-sm font-semibold uppercase tracking-widest text-hero-accent ${className}`}
+    >
+      <Icon name={config.guild.faction} size={18} />
+      <span class="sr-only">{t("faction.label")}: </span>
+      {faction?.name}
+    </span>
+  )
+}

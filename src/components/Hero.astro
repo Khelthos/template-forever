@@ -1,0 +1,66 @@
+---
+import HeroArt from "./HeroArt.astro";
+import FactionEmblem from "./FactionEmblem.astro";
+import Icon from "./Icon.astro";
+import { config } from "../lib/site-config.js";
+import { href } from "../lib/paths.js";
+import { t, contactTarget } from "../lib/navigation.js";
+
+const { site, guild, appearance, features } = config;
+const bg = appearance.backgroundImage;
+const contact = contactTarget();
+const recruiting = features.recruitment && guild.recruitment.status !== "closed";
+---
+
+<section class="relative isolate overflow-hidden border-b border-border bg-[var(--c-hero-to)]">
+  {
+    bg ? (
+      <img
+        src={href(bg)}
+        alt=""
+        class="absolute inset-0 -z-10 size-full object-cover"
+        fetchpriority="high"
+        decoding="async"
+        width="1600"
+        height="800"
+      />
+    ) : (
+      <div class="absolute inset-0 -z-10">
+        <HeroArt />
+      </div>
+    )
+  }
+  <!-- Overlay that keeps text readable on any image -->
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--c-hero-to)] via-[color-mix(in_srgb,var(--c-hero-to)_55%,transparent)] to-transparent"
+  >
+  </div>
+
+  <div class="container-page flex min-h-[30rem] flex-col justify-end py-14 sm:min-h-[34rem] lg:min-h-[38rem] lg:py-20">
+    <div class="reveal max-w-3xl">
+      <FactionEmblem />
+      <h1 class="mt-4 text-hero-text drop-shadow-[0_2px_8px_rgb(0_0_0/0.6)]">{site.name}</h1>
+      {site.tagline && <p class="font-display mt-3 text-xl text-hero-accent sm:text-2xl">{site.tagline}</p>}
+      {guild.description && <p class="mt-4 max-w-2xl text-lg text-hero-text/90">{guild.description}</p>}
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        {
+          recruiting && (
+            <a
+              href={contact.external ? contact.href : href(contact.href)}
+              class="btn btn-primary"
+              {...(contact.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
+            >
+              <Icon name={contact.external ? "chat" : "scroll"} size={18} />
+              {t("cta.join")}
+            </a>
+          )
+        }
+        <a href={href("/about/")} class="btn btn-hero-ghost">
+          {t("cta.discover")}
+          <Icon name="arrowRight" size={18} />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

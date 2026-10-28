@@ -1,0 +1,54 @@
+---
+// Light/dark theme button. Hidden without JavaScript (it would not work).
+import Icon from "./Icon.astro";
+import { t } from "../lib/navigation.js";
+---
+
+<button
+  type="button"
+  class="js-only inline-flex size-11 items-center justify-center rounded-md border border-border text-muted transition-colors hover:border-accent hover:text-accent"
+  data-theme-toggle
+  aria-label={t("theme.toggle")}
+  title={t("theme.toggle")}
+>
+  <span class="theme-icon-dark"><Icon name="moon" /></span>
+  <span class="theme-icon-light"><Icon name="sun" /></span>
+</button>
+
+<style>
+  .theme-icon-light { display: none; }
+  :global([data-theme-effective="light"]) .theme-icon-dark { display: none; }
+  :global([data-theme-effective="light"]) .theme-icon-light { display: inline; }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const media = window.matchMedia("(prefers-color-scheme: light)");
+
+  function effectiveTheme(): "dark" | "light" {
+    const explicit = root.getAttribute("data-theme");
+    if (explicit === "dark" || explicit === "light") return explicit;
+    // No explicit choice: use the scheme computed by the CSS (default or system).
+    return getComputedStyle(root).colorScheme.includes("light") ? "light" : "dark";
+  }
+
+  function sync() {
+    root.setAttribute("data-theme-effective", effectiveTheme());
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = effectiveTheme() === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      try {
+        localStorage.setItem("guild-theme", next);
+      } catch {
+        /* preference not saved: it only applies to this page */
+      }
+      sync();
+    });
+  });
+
+  media.addEventListener("change", sync);
+  sync();
+</script>

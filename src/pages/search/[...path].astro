@@ -1,0 +1,143 @@
+---
+// Client-side search across news and guides, based on /search-index.json.
+// No data is sent to third parties.
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import Icon from "../../components/Icon.astro";
+import { config } from "../../lib/site-config.js";
+import { href } from "../../lib/paths.js";
+import { t } from "../../lib/navigation.js";
+
+export const getStaticPaths = (() =>
+  config.features.search && (config.features.news || config.features.guides) ? [{ params: { path: undefined } }] : []) satisfies GetStaticPaths;
+
+const strings = {
+  empty: t("search.empty", { q: "{q}" }),
+  hint: t("search.hint"),
+  results: t("search.results", { n: "{n}" }),
+  news: t("search.news"),
+  guide: t("search.guide"),
+};
+---
+
+<BaseLayout title={t("search.title")} description={t("search.label")} noindex>
+  <div class="container-page max-w-3xl py-12 lg:py-16" data-search data-index={href("/search-index.json")} data-base={href("/")} data-strings={JSON.stringify(strings)}>
+    <SectionHeading level={1} title={t("search.title")} />
+
+    <noscript>
+      <p class="panel p-5 text-muted">
+        {t("search.noJs")}
+        {config.features.news && <a class="link ml-1" href={href("/news/")}>{t("nav.news")}</a>}
+        {config.features.guides && <a class="link ml-2" href={href("/guides/")}>{t("nav.guides")}</a>}
+      </p>
+    </noscript>
+
+    <form class="js-only" role="search" data-search-form>
+      <label for="q" class="mb-1 block font-semibold">{t("search.label")}</label>
+      <div class="relative">
+        <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"><Icon name="search" size={18} /></span>
+        <input id="q" name="q" type="search" class="form-control pl-10" placeholder={t("search.placeholder")} autocomplete="off" />
+      </div>
+      <p class="mt-3 text-sm text-muted" aria-live="polite" data-search-status>{t("search.hint")}</p>
+    </form>
+
+    <ol class="mt-6 space-y-3" data-search-results></ol>
+  </div>
+</BaseLayout>
+
+<script>
+  type Item = { type: string; url: string; title: string; description: string; tags: string[]; body: string };
+
+  const root = document.querySelector<HTMLElement>("[data-search]");
+  if (root) {
+    const strings = JSON.parse(root.dataset.strings ?? "{}");
+    const base = root.dataset.base ?? "/";
+    const form = root.querySelector<HTMLFormElement>("[data-search-form]")!;
+    const input = form.querySelector<HTMLInputElement>("input")!;
+    const status = root.querySelector<HTMLElement>("[data-search-status]")!;
+    const results = root.querySelector<HTMLOListElement>("[data-search-results]")!;
+    let index: Item[] | null = null;
+
+    const normalize = (s: string) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+    async function load() {
+      if (index) return index;
+      try {
+        const res = await fetch(root!.dataset.index!);
+        index = (await res.json()) as Item[];
+      } catch {
+        index = [];
+      }
+      return index;
+    }
+
+    function score(item: Item, terms: string[]) {
+      const title = normalize(item.title);
+      const desc = normalize(item.description);
+      const tags = normalize(item.tags.join(" "));
+      const body = normalize(item.body);
+      let total = 0;
+      for (const term of terms) {
+        const s = (title.includes(term) ? 6 : 0) + (tags.includes(term) ? 4 : 0) + (desc.includes(term) ? 3 : 0) + (body.includes(term) ? 1 : 0);
+        if (!s) return 0; // every word must match
+        total += s;
+      }
+      return total;
+    }
+
+    async function run() {
+      const q = input.value.trim();
+      const url = new URL(location.href);
+      if (q) url.searchParams.set("q", q);
+      else url.searchParams.delete("q");
+      history.replaceState(null, "", url);
+
+      results.replaceChildren();
+      if (q.length < 2) {
+        status.textContent = strings.hint;
+        return;
+      }
+      const terms = normalize(q).split(/\s+/).filter(Boolean);
+      const found = (await load())
+        .map((item) => ({ item, s: score(item, terms) }))
+        .filter((r) => r.s > 0)
+        .sort((a, b) => b.s - a.s);
+
+      status.textContent = found.length ? strings.results.replace("{n}", String(found.length)) : strings.empty.replace("{q}", q);
+
+      for (const { item } of found) {
+        const li = document.createElement("li");
+        li.className = "panel p-4";
+        const kind = document.createElement("span");
+        kind.className = "chip";
+        kind.textContent = item.type === "news" ? strings.news : strings.guide;
+        const a = document.createElement("a");
+        a.href = base + item.url;
+        a.className = "font-display mt-2 block text-lg text-text hover:text-accent";
+        a.textContent = item.title;
+        const p = document.createElement("p");
+        p.className = "mt-1 text-sm text-muted";
+        p.textContent = item.description;
+        li.append(kind, a, p);
+        results.append(li);
+      }
+    }
+
+    let timer: number | undefined;
+    input.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(run, 150);
+    });
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      run();
+    });
+
+    const initial = new URL(location.href).searchParams.get("q");
+    if (initial) {
+      input.value = initial;
+      run();
+    }
+  }
+</script>

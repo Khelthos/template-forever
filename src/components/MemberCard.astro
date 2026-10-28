@@ -1,0 +1,97 @@
+---
+// Roster member card. Class and role are shown with icon, text and color
+// (never color alone).
+import Icon from "./Icon.astro";
+import { href } from "../lib/paths.js";
+import { t } from "../lib/navigation.js";
+import type { Member } from "../lib/types";
+
+interface Props {
+  member: Member;
+  compact?: boolean;
+}
+
+const { member: m, compact = false } = Astro.props;
+const initials = m.name.slice(0, 2).toUpperCase();
+---
+
+<li
+  class="member panel flex flex-col overflow-hidden"
+  style={`--class-color:${m.cls.color}`}
+  data-name={m.name.toLowerCase()}
+  data-race={m.race.id}
+  data-class={m.cls.id}
+  data-spec={`${m.cls.id}:${m.spec.id}`}
+  data-role={m.role}
+  data-rank={m.rank}
+  data-rank-order={m.rankOrder}
+  data-active={String(m.active)}
+>
+  <div class="h-1 bg-[var(--class-color)]" aria-hidden="true"></div>
+  <div class="flex flex-1 gap-4 p-4">
+    <div class="relative shrink-0 self-start">
+      {
+        m.avatar ? (
+          <img
+            src={href(m.avatar)}
+            alt=""
+            width="64"
+            height="64"
+            loading="lazy"
+            class="size-16 rounded-full border-2 border-[var(--class-color)] object-cover"
+          />
+        ) : (
+          <span
+            class="font-display flex size-16 items-center justify-center rounded-full border-2 border-[var(--class-color)] bg-surface-2 text-xl text-text"
+            aria-hidden="true"
+          >
+            {initials}
+          </span>
+        )
+      }
+      <span
+        class="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full border border-border bg-surface text-[var(--class-color)]"
+        aria-hidden="true"
+      >
+        <Icon name={m.cls.id} size={16} />
+      </span>
+    </div>
+
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+        <h3 class="truncate text-lg">{m.name}</h3>
+        {!m.active && <span class="chip">{t("roster.inactiveBadge")}</span>}
+      </div>
+      <p class="text-sm text-muted">
+        {m.race.name} · <span class="font-semibold text-text">{m.cls.name}</span>
+      </p>
+      <dl class="mt-2 flex flex-wrap gap-2 text-sm">
+        <div class="chip">
+          <dt class="sr-only">{t("roster.spec")}</dt>
+          <dd>{m.spec.name}</dd>
+        </div>
+        <div class="chip">
+          <dt class="sr-only">{t("roster.role")}</dt>
+          <dd class="inline-flex items-center gap-1"><Icon name={m.role} size={14} />{t(`role.${m.role}`)}</dd>
+        </div>
+        {
+          m.rank && (
+            <div class="chip">
+              <dt class="sr-only">{t("roster.rank")}</dt>
+              <dd>{m.rank}</dd>
+            </div>
+          )
+        }
+      </dl>
+      {!compact && m.description && <p class="mt-2 text-sm text-muted">{m.description}</p>}
+      {
+        !compact && m.profileUrl && (
+          <a href={m.profileUrl} class="link mt-2 inline-flex items-center gap-1 text-sm" rel="noopener noreferrer" target="_blank">
+            {t("roster.profile")} <Icon name="external" size={14} />
+            <span class="sr-only">{m.name}</span>
+          </a>
+        )
+      }
+    </div>
+  </div>
+</li>

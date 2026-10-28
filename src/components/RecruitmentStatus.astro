@@ -1,0 +1,60 @@
+---
+// Recruitment status with contacts. No online application form: it points to
+// the configured contacts.
+import Icon from "./Icon.astro";
+import { config } from "../lib/site-config.js";
+import { contactTarget, t } from "../lib/navigation.js";
+import { href } from "../lib/paths.js";
+
+interface Props {
+  headingLevel?: 2 | 3;
+}
+
+const { headingLevel = 2 } = Astro.props;
+const H = headingLevel === 2 ? "h2" : "h3";
+const r = config.guild.recruitment;
+const contact = contactTarget();
+const symbol = { open: "●", limited: "◐", closed: "○" }[r.status];
+const tone = {
+  open: "border-[color-mix(in_srgb,#3fa66b_70%,var(--c-border))]",
+  limited: "border-[color-mix(in_srgb,#d1a03b_70%,var(--c-border))]",
+  closed: "border-border",
+}[r.status];
+---
+
+<section class={`panel panel-ornate border-l-4 p-6 ${tone}`} aria-labelledby="recruitment-title">
+  <p class="text-sm font-semibold uppercase tracking-widest text-muted">{t("recruitment.title")}</p>
+  <H id="recruitment-title" class="mt-1 flex items-baseline gap-2 text-2xl text-text">
+    <span aria-hidden="true">{symbol}</span>
+    <span>{t(`recruitment.${r.status}`)}</span>
+  </H>
+  {r.message && <p class="mt-3 text-muted">{r.message}</p>}
+  {
+    r.wanted.length > 0 && r.status !== "closed" && (
+      <div class="mt-4">
+        <p class="font-semibold">{t("recruitment.wanted")}:</p>
+        <ul class="mt-2 flex flex-wrap gap-2">
+          {r.wanted.map((w) => (
+            <li class="chip">{w}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  {
+    r.status !== "closed" &&
+      (contact.external ? (
+        <a href={contact.href} class="btn btn-primary mt-6" rel="noopener noreferrer" target="_blank">
+          <Icon name="chat" size={18} />
+          {t("cta.contact")}
+        </a>
+      ) : (
+        <p class="mt-4 text-sm text-muted">
+          {t("recruitment.how")}{" "}
+          <a href={href(contact.href)} class="link">
+            {t("about.contacts")}
+          </a>
+        </p>
+      ))
+  }
+</section>

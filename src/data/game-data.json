@@ -1,0 +1,118 @@
+{
+  "$comment": "Game catalog for World of Warcraft: Forever. Edit it when Blizzard adds races, classes or combinations. 'status' tells how reliable an entry is: 'official' = verified on news.blizzard.com; 'unconfirmed' = third-party source or still to be confirmed. See docs/GAME-DATA.md for sources.",
+  "sources": [
+    {
+      "label": "Blizzard News — Create the Hero You Want to Be in World of Warcraft: Forever",
+      "url": "https://news.blizzard.com/en-us/article/24304075/create-the-hero-you-want-to-be-in-world-of-warcraft-forever",
+      "checked": "2026-10-27"
+    },
+    {
+      "label": "Icy Veins — Playable class and race combos in World of Warcraft: Forever",
+      "url": "https://www.icy-veins.com/wow-forever/news/heres-the-playable-class-and-race-combos-in-world-of-warcraft-forever/",
+      "checked": "2026-10-27"
+    }
+  ],
+  "factions": [
+    { "id": "alliance", "name": "Alliance" },
+    { "id": "horde", "name": "Horde" }
+  ],
+  "roles": [
+    { "id": "tank", "name": "Tank" },
+    { "id": "healer", "name": "Healer" },
+    { "id": "dps", "name": "DPS" }
+  ],
+  "classes": [
+    {
+      "id": "druid", "name": "Druid", "color": "#FF7C0A",
+      "specs": [
+        { "id": "balance", "name": "Balance", "role": "dps" },
+        { "id": "feral", "name": "Feral", "role": "tank" },
+        { "id": "restoration", "name": "Restoration", "role": "healer" }
+      ]
+    },
+    {
+      "id": "hunter", "name": "Hunter", "color": "#AAD372",
+      "specs": [
+        { "id": "beast-mastery", "name": "Beast Mastery", "role": "dps" },
+        { "id": "marksmanship", "name": "Marksmanship", "role": "dps" },
+        { "id": "survival", "name": "Survival", "role": "dps" }
+      ]
+    },
+    {
+      "id": "mage", "name": "Mage", "color": "#3FC7EB",
+      "specs": [
+        { "id": "arcane", "name": "Arcane", "role": "dps" },
+        { "id": "fire", "name": "Fire", "role": "dps" },
+        { "id": "frost", "name": "Frost", "role": "dps" }
+      ]
+    },
+    {
+      "id": "paladin", "name": "Paladin", "color": "#F48CBA",
+      "specs": [
+        { "id": "holy", "name": "Holy", "role": "healer" },
+        { "id": "protection", "name": "Protection", "role": "tank" },
+        { "id": "retribution", "name": "Retribution", "role": "dps" }
+      ]
+    },
+    {
+      "id": "priest", "name": "Priest", "color": "#FFFFFF",
+      "specs": [
+        { "id": "discipline", "name": "Discipline", "role": "healer" },
+        { "id": "holy", "name": "Holy", "role": "healer" },
+        { "id": "shadow", "name": "Shadow", "role": "dps" }
+      ]
+    },
+    {
+      "id": "rogue", "name": "Rogue", "color": "#FFF468",
+      "specs": [
+        { "id": "assassination", "name": "Assassination", "role": "dps" },
+        { "id": "combat", "name": "Combat", "role": "dps" },
+        { "id": "subtlety", "name": "Subtlety", "role": "dps" }
+      ]
+    },
+    {
+      "id": "shaman", "name": "Shaman", "color": "#0070DD",
+      "specs": [
+        { "id": "elemental", "name": "Elemental", "role": "dps" },
+        { "id": "enhancement", "name": "Enhancement", "role": "dps" },
+        { "id": "restoration", "name": "Restoration", "role": "healer" }
+      ]
+    },
+    {
+      "id": "warlock", "name": "Warlock", "color": "#8788EE",
+      "specs": [
+        { "id": "affliction", "name": "Affliction", "role": "dps" },
+        { "id": "demonology", "name": "Demonology", "role": "dps" },
+        { "id": "destruction", "name": "Destruction", "role": "dps" }
+      ]
+    },
+    {
+      "id": "warrior", "name": "Warrior", "color": "#C69B6D",
+      "specs": [
+        { "id": "arms", "name": "Arms", "role": "dps" },
+        { "id": "fury", "name": "Fury", "role": "dps" },
+        { "id": "protection", "name": "Protection", "role": "tank" }
+      ]
+    }
+  ],
+  "specsStatus": "unconfirmed",
+  "specsNote": "Blizzard reworked the talents of all nine classes for Forever. Specialization names follow the three classic trees and must be confirmed once official details are published. The note shown on the site is translated in src/i18n/locales (key roster.specsNote).",
+  "raceGroups": [
+    {
+      "id": "skyborne", "name": "Skyborne", "neutral": true, "startingZone": "Zephras Isle",
+      "note": "Neutral race: every Skyborne character starts on Zephras Isle and joins a faction by choosing a variant. High Order Skyborne = Alliance, Windshaper Skyborne = Horde."
+    }
+  ],
+  "races": [
+    { "id": "human", "name": "Human", "faction": "alliance", "startingZone": "Elwynn Forest", "status": "official", "classes": ["hunter", "mage", "paladin", "priest", "rogue", "warlock", "warrior"] },
+    { "id": "dwarf", "name": "Dwarf", "faction": "alliance", "startingZone": "Dun Morogh", "status": "official", "classes": ["hunter", "paladin", "priest", "rogue", "shaman", "warrior"] },
+    { "id": "night-elf", "name": "Night Elf", "faction": "alliance", "startingZone": "Teldrassil", "status": "official", "classes": ["druid", "hunter", "priest", "rogue", "warrior"] },
+    { "id": "gnome", "name": "Gnome", "faction": "alliance", "startingZone": "Dun Morogh", "status": "official", "classes": ["mage", "priest", "rogue", "warlock", "warrior"] },
+    { "id": "orc", "name": "Orc", "faction": "horde", "startingZone": "Durotar", "status": "official", "classes": ["hunter", "mage", "rogue", "shaman", "warlock", "warrior"] },
+    { "id": "undead", "name": "Undead", "aliases": ["Forsaken"], "faction": "horde", "startingZone": "Tirisfal Glades", "status": "official", "classes": ["mage", "paladin", "priest", "rogue", "warlock", "warrior"] },
+    { "id": "tauren", "name": "Tauren", "faction": "horde", "startingZone": "Mulgore", "status": "official", "classes": ["druid", "hunter", "shaman", "warrior"] },
+    { "id": "troll", "name": "Troll", "faction": "horde", "startingZone": "Durotar", "status": "official", "classes": ["hunter", "mage", "priest", "rogue", "shaman", "warlock", "warrior"] },
+    { "id": "high-order-skyborne", "name": "High Order Skyborne", "aliases": ["Skyborne (High Order)"], "group": "skyborne", "faction": "alliance", "startingZone": "Zephras Isle", "status": "official", "classes": ["druid", "hunter", "mage", "rogue", "warrior"] },
+    { "id": "windshaper-skyborne", "name": "Windshaper Skyborne", "aliases": ["Skyborne (Windshaper)"], "group": "skyborne", "faction": "horde", "startingZone": "Zephras Isle", "status": "official", "classes": ["druid", "hunter", "rogue", "shaman", "warrior"] }
+  ]
+}

@@ -1,0 +1,67 @@
+---
+// News: paginated archive (/news/, /news/page/2/ ...) and articles
+// (/news/<file-name>/). When features.news is false no page is generated.
+import type { GetStaticPaths } from "astro";
+import { render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import NewsCard from "../../components/NewsCard.astro";
+import Pagination from "../../components/Pagination.astro";
+import { config } from "../../lib/site-config.js";
+import { getPublished, related } from "../../lib/content.js";
+import { t } from "../../lib/navigation.js";
+
+export const getStaticPaths = (async () => {
+  if (!config.features.news) return [];
+  const all = await getPublished("news");
+  const perPage = config.news.perPage;
+  const last = Math.max(1, Math.ceil(all.length / perPage));
+
+  const listing = Array.from({ length: last }, (_, i) => ({
+    params: { path: i === 0 ? undefined : `page/${i + 1}` },
+    props: { kind: "list" as const, entries: all.slice(i * perPage, (i + 1) * perPage), current: i + 1, last },
+  }));
+
+  const articles = all.map((entry) => ({
+    params: { path: entry.id },
+    props: { kind: "article" as const, entry, related: related(entry, all) },
+  }));
+
+  return [...listing, ...articles];
+}) satisfies GetStaticPaths;
+
+type ListProps = { kind: "list"; entries: CollectionEntry<"news">[]; current: number; last: number };
+type ArticleProps = { kind: "article"; entry: CollectionEntry<"news">; related: CollectionEntry<"news">[] };
+const props = Astro.props as ListProps | ArticleProps;
+const rendered = props.kind === "article" ? await render(props.entry) : null;
+---
+
+{
+  props.kind === "list" ? (
+    <BaseLayout
+      title={props.current > 1 ? `${t("news.title")} — ${t("news.page")} ${props.current}` : t("news.title")}
+      description={t("news.intro")}
+    >
+      <div class="container-page py-12 lg:py-16">
+        <SectionHeading level={1} title={t("news.title")} intro={t("news.intro")} />
+        {props.entries.length ? (
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {props.entries.map((entry) => (
+              <NewsCard entry={entry} headingLevel={2} />
+            ))}
+          </div>
+        ) : (
+          <p class="panel p-6 text-muted">{t("news.empty")}</p>
+        )}
+        <Pagination current={props.current} last={props.last} basePath="/news/" />
+      </div>
+    </BaseLayout>
+  ) : (
+    rendered && (
+      <ArticleLayout kind="news" data={props.entry.data} headings={rendered.headings} related={props.related}>
+        <rendered.Content />
+      </ArticleLayout>
+    )
+  )
+}

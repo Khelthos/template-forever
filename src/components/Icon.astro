@@ -1,0 +1,72 @@
+---
+// Original SVG icons of the template (24x24, color = currentColor).
+// Decorative by default (aria-hidden). Pass `label` for an informative icon.
+interface Props {
+  name: string;
+  size?: number;
+  label?: string;
+  class?: string;
+}
+
+const { name, size = 20, label, class: className = "" } = Astro.props;
+
+const paths: Record<string, string> = {
+  // Factions
+  alliance:
+    '<path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/><path d="M12 6v12M8 9.5h8M9 6.8 12 9l3-2.2"/>',
+  horde:
+    '<path d="M12 2 9 6H5l1.5 4L4 14l4 .5L9 19l3-2 3 2 1-4.5 4-.5-2.5-4L19 6h-4z"/><path d="M10 10.5h4M12 9v5"/>',
+  // Roles
+  tank: '<path d="M12 2.5 4.5 5.5v5.8c0 4.6 3.1 8.6 7.5 10.2 4.4-1.6 7.5-5.6 7.5-10.2V5.5z"/><path d="M12 6.5v11"/>',
+  healer: '<path d="M9.5 3.5h5v6h6v5h-6v6h-5v-6h-6v-5h6z"/>',
+  dps: '<path d="m4 4 9 9M4 4h4M4 4v4M20 4l-9 9M20 4h-4M20 4v4M7.5 16.5l-3 3M16.5 16.5l3 3M9 15l-1.5 1.5L6 15M15 15l1.5 1.5L18 15"/>',
+  // Classes
+  warrior: '<path d="M14.5 3.5h6v6L10 20l-3-3zM6 15l3 3M4 17l3 3M4 20l1.5-1.5"/>',
+  paladin: '<path d="M8 3h8v5H8zM12 8v13M9 21h6"/><path d="M6 5.5h2M16 5.5h2"/>',
+  hunter: '<path d="M6 3c7 3 7 15 0 18M6 3v18M3 12h16M16 9l3 3-3 3"/>',
+  rogue: '<path d="m5 19 9-9 1.5-5.5L21 3l-1.5 5.5L14 10M5 19l-1.5 1.5M8.5 15.5 5 12M8.5 15.5 12 19"/>',
+  priest: '<circle cx="12" cy="8" r="3.5"/><path d="M12 11.5V21M8 15h8M12 1.5v1.5M5.5 4l1 1M18.5 4l-1 1"/>',
+  shaman: '<path d="M13 2 6 13h5l-1 9 7-11h-5z"/>',
+  mage: '<path d="M12 2.5 13.8 9l6.7 1.2-6 2.8.9 6.7L12 15l-3.4 4.7.9-6.7-6-2.8L10.2 9z"/>',
+  warlock:
+    '<path d="M12 3c-4.5 0-8 3.2-8 7.5 0 2.8 1.5 4.6 3 5.5V20h10v-4c1.5-.9 3-2.7 3-5.5C20 6.2 16.5 3 12 3z"/><circle cx="9" cy="11" r="1.5"/><circle cx="15" cy="11" r="1.5"/><path d="M10 20v-2M14 20v-2"/>',
+  druid: '<path d="M5 19c0-8 5-14 14-15-1 9-7 14-14 15zM5 19l7-7"/>',
+  // Interface
+  menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
+  close: '<path d="M6 6l12 12M18 6 6 18"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  moon: '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+  search: '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/>',
+  chat: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01"/>',
+  play: '<rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/>',
+  stream: '<path d="M4 4h16v11l-4 4h-4l-2 2H8v-2H4z"/><path d="M10 8v4M15 8v4"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9S9.5 5.5 12 3z"/>',
+  external: '<path d="M14 4h6v6M20 4l-9 9M18 14v6H4V6h6"/>',
+  calendar: '<rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  scroll: '<path d="M7 3h11a2 2 0 0 1 2 2v2h-4M7 3a2 2 0 0 0-2 2v12a2 2 0 0 1-2 2h11a2 2 0 0 0 2-2V5M9 8h5M9 12h5"/>',
+  castle: '<path d="M3 21V9h3V6h3v3h2V5h2v4h2V6h3v3h3v12zM10 21v-5a2 2 0 0 1 4 0v5"/>',
+  arrowLeft: '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+  arrowRight: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  tag: '<path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
+};
+
+const body = paths[name] ?? paths.scroll;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  class={`shrink-0 ${className}`}
+  aria-hidden={label ? undefined : "true"}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  focusable="false"
+><Fragment set:html={body} /></svg>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Guild crest">
+  <!-- Original demo crest (Horde variant) of Azeroth Guild Template. Replace it with your guild logo. -->
+  <defs>
+    <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#e2b46a"/>
+      <stop offset="0.55" stop-color="#a8743a"/>
+      <stop offset="1" stop-color="#6b4420"/>
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8f2a24"/>
+      <stop offset="1" stop-color="#3b1210"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 4 50 16H22l6 22-12 22 14 10-4 28 28-6 10 28 10-28 28 6-4-28 14-10-12-22 6-22H78z" fill="url(#iron)"/>
+  <path d="M64 18 54 27H32l4 15-9 18 10 7-3 20 21-4 9 21 9-21 21 4-3-20 10-7-9-18 4-15H74z" fill="url(#field)"/>
+  <path d="M46 44l36 36M82 44 46 80" stroke="url(#iron)" stroke-width="7" stroke-linecap="round"/>
+  <path d="M40 38l10 2-2 10zM88 38l-10 2 2 10z" fill="#e2b46a"/>
+  <circle cx="64" cy="62" r="9" fill="#3b1210" stroke="url(#iron)" stroke-width="4"/>
+</svg>

@@ -1,0 +1,30 @@
+---
+interface Props {
+  title: string;
+  intro?: string;
+  /** Heading level: 1 for pages, 2 for sections. */
+  level?: 1 | 2;
+  id?: string;
+  link?: { href: string; label: string };
+}
+
+const { title, intro, level = 2, id, link } = Astro.props;
+const Tag = level === 1 ? "h1" : "h2";
+---
+
+<div class="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+  <div class="max-w-2xl">
+    <div class="divider mb-3 w-24" aria-hidden="true">
+      <span class="block size-2 rotate-45 bg-ornament"></span>
+    </div>
+    <Tag id={id} class="text-accent">{title}</Tag>
+    {intro && <p class="mt-2 text-muted">{intro}</p>}
+  </div>
+  {
+    link && (
+      <a href={link.href} class="link shrink-0 font-semibold">
+        {link.label} <span aria-hidden="true">→</span>
+      </a>
+    )
+  }
+</div>

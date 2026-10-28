@@ -1,0 +1,158 @@
+---
+// Layout for news and guides: header, cover, table of contents (guides),
+// Markdown content, tags and related content.
+import BaseLayout from "./BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { href } from "../lib/paths.js";
+import { config } from "../lib/site-config.js";
+import { formatDate, t } from "../lib/navigation.js";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  kind: "news" | "guides";
+  data: any;
+  headings?: Heading[];
+  related?: { id: string; data: any }[];
+}
+
+const { kind, data, headings = [], related = [] } = Astro.props;
+const toc = kind === "guides" ? headings.filter((h) => h.depth === 2 || h.depth === 3) : [];
+const backHref = kind === "news" ? "/news/" : "/guides/";
+const category = kind === "guides" ? config.guides.categories.find((c) => c.id === data.type) : null;
+---
+
+<BaseLayout
+  title={data.title}
+  description={data.description}
+  image={data.cover}
+  type="article"
+  publishedTime={data.pubDate}
+>
+  <article class="container-page py-10 lg:py-14">
+    <nav aria-label={t("nav.breadcrumb")} class="text-sm">
+      <a href={href(backHref)} class="link inline-flex items-center gap-1.5">
+        <Icon name="arrowLeft" size={16} />
+        {t(kind === "news" ? "news.back" : "guides.back")}
+      </a>
+    </nav>
+
+    <header class="mt-6 max-w-3xl">
+      <div class="flex flex-wrap gap-2 text-sm">
+        {data.category && <span class="chip">{data.category}</span>}
+        {
+          category && (
+            <a href={href(`/guides/category/${category.id}/`)} class="chip">
+              {category.label}
+            </a>
+          )
+        }
+        {data.example && <span class="chip">{t("demo.notice")}</span>}
+        {data.draft && <span class="chip">{t("article.draft")}</span>}
+      </div>
+      <h1 class="mt-4 text-text">{data.title}</h1>
+      <p class="mt-4 text-lg text-muted">{data.description}</p>
+      <p class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="calendar" size={16} />
+          {t("article.published")} <time datetime={data.pubDate.toISOString()}>{formatDate(data.pubDate)}</time>
+        </span>
+        {
+          data.updatedDate && (
+            <span>
+              {t("article.updated")} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time>
+            </span>
+          )
+        }
+        {
+          data.author && (
+            <span class="inline-flex items-center gap-1.5">
+              <Icon name="user" size={16} />
+              {data.author}
+            </span>
+          )
+        }
+      </p>
+      <div class="divider mt-6" aria-hidden="true"><span class="block size-2 rotate-45 bg-ornament"></span></div>
+    </header>
+
+    {
+      data.cover && (
+        <img
+          src={href(data.cover)}
+          alt={data.coverAlt}
+          width="1200"
+          height="600"
+          class="mt-8 aspect-[2/1] w-full max-w-4xl rounded-lg border border-border object-cover"
+          decoding="async"
+        />
+      )
+    }
+
+    <div class:list={["mt-8 gap-10", toc.length > 1 && "lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]"]}>
+      {
+        toc.length > 1 && (
+          <aside class="mb-8 lg:order-last lg:mb-0">
+            <nav aria-labelledby="toc-title" class="panel p-4 lg:sticky lg:top-24">
+              <h2 id="toc-title" class="font-display text-base text-accent">
+                {t("guides.toc")}
+              </h2>
+              <ol class="mt-3 space-y-1.5 text-sm">
+                {toc.map((h) => (
+                  <li class:list={[h.depth === 3 && "pl-4"]}>
+                    <a href={`#${h.slug}`} class="text-muted hover:text-accent">
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ol>
+            </nav>
+          </aside>
+        )
+      }
+      <div class="prose">
+        <slot />
+      </div>
+    </div>
+
+    {
+      data.tags.length > 0 && (
+        <div class="mt-10 flex flex-wrap items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-muted">
+            <Icon name="tag" size={16} />
+            {t("article.tags")}:
+          </span>
+          {data.tags.map((tag: string) => (
+            <a href={href(`/tags/${tag}/`)} class="chip">
+              #{tag}
+            </a>
+          ))}
+        </div>
+      )
+    }
+  </article>
+
+  {
+    related.length > 0 && (
+      <section class="container-page" aria-labelledby="related-title">
+        <h2 id="related-title" class="text-2xl text-accent">
+          {t(kind === "news" ? "news.related" : "guides.related")}
+        </h2>
+        <ul class="mt-5 grid gap-4 md:grid-cols-3">
+          {related.map((r) => (
+            <li class="panel lift p-4">
+              <a href={href(`/${kind}/${r.id}/`)} class="font-display text-lg text-text no-underline hover:text-accent">
+                {r.data.title}
+              </a>
+              <p class="mt-1 text-sm text-muted">{r.data.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+</BaseLayout>

@@ -1,0 +1,135 @@
+[
+  {
+    "id": "grukka",
+    "name": "Grukka",
+    "race": "Orc",
+    "class": "Warrior",
+    "spec": "Protection",
+    "role": "Tank",
+    "rank": "Guild Master",
+    "description": "Founder of the guild. Leads the raids and welcomes newcomers.",
+    "active": true
+  },
+  {
+    "id": "vexa",
+    "name": "Vexa",
+    "race": "Troll",
+    "class": "Priest",
+    "spec": "Holy",
+    "rank": "Officer",
+    "description": "Leads the healers and handles raid assignments.",
+    "active": true
+  },
+  {
+    "id": "moonhorn",
+    "name": "Moonhorn",
+    "race": "Tauren",
+    "class": "Druid",
+    "spec": "Restoration",
+    "rank": "Officer",
+    "description": "Organizes the Tuesday dungeon groups.",
+    "active": true
+  },
+  {
+    "id": "brakka",
+    "name": "Brakka",
+    "race": "Tauren",
+    "class": "Warrior",
+    "spec": "Protection",
+    "rank": "Veteran",
+    "active": true
+  },
+  {
+    "id": "selwyn",
+    "name": "Selwyn",
+    "race": "Undead",
+    "class": "Mage",
+    "spec": "Frost",
+    "rank": "Veteran",
+    "description": "Prepares the strategies for the toughest encounters.",
+    "active": true
+  },
+  {
+    "id": "morthis",
+    "name": "Morthis",
+    "race": "Undead",
+    "class": "Warlock",
+    "spec": "Affliction",
+    "rank": "Member",
+    "active": true
+  },
+  {
+    "id": "zanjin",
+    "name": "Zanjin",
+    "race": "Troll",
+    "class": "Hunter",
+    "spec": "Marksmanship",
+    "rank": "Member",
+    "active": true
+  },
+  {
+    "id": "thokk",
+    "name": "Thokk",
+    "race": "Orc",
+    "class": "Shaman",
+    "spec": "Enhancement",
+    "rank": "Member",
+    "active": true
+  },
+  {
+    "id": "ilsa",
+    "name": "Ilsa",
+    "race": "Undead",
+    "class": "Rogue",
+    "spec": "Combat",
+    "rank": "Member",
+    "active": true
+  },
+  {
+    "id": "gorvak",
+    "name": "Gorvak",
+    "race": "Orc",
+    "class": "Warrior",
+    "spec": "Fury",
+    "rank": "Member",
+    "active": true
+  },
+  {
+    "id": "kaggra",
+    "name": "Kaggra",
+    "race": "Orc",
+    "class": "Mage",
+    "spec": "Fire",
+    "rank": "Recruit",
+    "description": "One of the guild's first Orc Mages.",
+    "active": true
+  },
+  {
+    "id": "rashka",
+    "name": "Rashka",
+    "race": "Troll",
+    "class": "Warlock",
+    "spec": "Destruction",
+    "rank": "Recruit",
+    "active": true
+  },
+  {
+    "id": "tahna",
+    "name": "Tahna",
+    "race": "Tauren",
+    "class": "Hunter",
+    "spec": "Beast Mastery",
+    "rank": "Recruit",
+    "active": true
+  },
+  {
+    "id": "elric",
+    "name": "Elric",
+    "race": "Undead",
+    "class": "Paladin",
+    "spec": "Holy",
+    "rank": "Member",
+    "description": "Taking a break for a few weeks.",
+    "active": false
+  }
+]

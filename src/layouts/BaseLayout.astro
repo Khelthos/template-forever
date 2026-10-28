@@ -1,0 +1,108 @@
+---
+// Layout shared by every page: SEO metadata, theme, fonts, header and footer.
+import "../styles/global.css";
+import { Font } from "astro:assets";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { config } from "../lib/site-config.js";
+import { themeCss, typography } from "../lib/theme.js";
+import { href, absoluteUrl } from "../lib/paths.js";
+import { t } from "../lib/navigation.js";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedTime?: Date;
+  noindex?: boolean;
+}
+
+const { site, appearance, guild, features } = config;
+const {
+  title,
+  description = site.description,
+  image = site.ogImage || site.logo,
+  type = "website",
+  publishedTime,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name}${site.tagline ? ` — ${site.tagline}` : ""}`;
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImage = /^https?:/.test(image) ? image : absoluteUrl(image, Astro.site);
+const typo = typography(appearance, site.language);
+const css = themeCss(appearance, guild.faction) + typo.css;
+const storeTheme = features.themeToggle;
+---
+
+<!doctype html>
+<html
+  lang={site.language}
+  class="no-js"
+  data-faction={guild.faction}
+  data-palette={appearance.colorPreset}
+  data-animations={appearance.showAnimations ? "on" : "off"}
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" href={href(site.favicon)} type={site.favicon.endsWith(".svg") ? "image/svg+xml" : undefined} />
+    <link rel="sitemap" href={href("/sitemap-index.xml")} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title ?? site.name} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={site.locale.replace("-", "_")} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime.toISOString()} />}
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script is:inline define:vars={{ storeTheme }}>
+      (function () {
+        var d = document.documentElement;
+        d.classList.remove("no-js");
+        d.classList.add("js");
+        if (!storeTheme) return;
+        try {
+          var saved = localStorage.getItem("guild-theme");
+          if (saved === "dark" || saved === "light") d.setAttribute("data-theme", saved);
+        } catch (e) {
+          /* localStorage unavailable: the default theme is used */
+        }
+      })();
+    </script>
+
+    {appearance.fontLoading === "self-hosted" && typo.cssVariables.map((v) => <Font cssVariable={v as any} preload={[{ subset: "latin", style: "normal" }]} />)}
+    {
+      appearance.fontLoading === "google" && (
+        <>
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+          <link rel="stylesheet" href={typo.googleHref} />
+        </>
+      )
+    }
+    <style is:inline set:html={css}></style>
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-primary focus:px-4 focus:py-2 focus:text-on-primary"
+    >
+      {t("nav.skip")}
+    </a>
+    <Header />
+    <main id="main" class="flex-1" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

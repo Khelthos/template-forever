@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { href } from "../lib/paths.js";
+import { t } from "../lib/navigation.js";
+---
+
+<BaseLayout title={t("notFound.title")} noindex>
+  <div class="container-page flex flex-col items-center py-24 text-center">
+    <p class="font-display text-7xl text-accent" aria-hidden="true">404</p>
+    <h1 class="mt-4 text-text">{t("notFound.title")}</h1>
+    <p class="mt-4 max-w-md text-muted">{t("notFound.text")}</p>
+    <a href={href("/")} class="btn btn-primary mt-8">{t("notFound.home")}</a>
+  </div>
+</BaseLayout>

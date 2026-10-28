@@ -1,0 +1,72 @@
+---
+import Navigation from "./Navigation.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import FactionEmblem from "./FactionEmblem.astro";
+import Icon from "./Icon.astro";
+import { config } from "../lib/site-config.js";
+import { href } from "../lib/paths.js";
+import { t } from "../lib/navigation.js";
+
+const { site, guild, features } = config;
+const discord = features.socialLinks ? guild.social.discord : "";
+---
+
+<header class="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur supports-[backdrop-filter]:bg-bg/80">
+  <div class="container-page relative flex flex-wrap items-center gap-x-3 gap-y-2 py-2.5 lg:flex-nowrap">
+    <a href={href("/")} class="mr-auto flex min-w-0 items-center gap-3 no-underline">
+      <img src={href(site.logo)} alt="" width="44" height="44" class="size-11 shrink-0 object-contain" />
+      <span class="min-w-0">
+        <span class="font-display block truncate text-lg leading-tight text-text sm:text-xl">
+          <span class="sm:hidden">{site.shortName}</span>
+          <span class="hidden sm:inline">{site.name}</span>
+        </span>
+        <FactionEmblem variant="compact" class="hidden sm:inline-flex" />
+      </span>
+    </a>
+
+    <div class="order-last w-full lg:order-none lg:w-auto">
+      <Navigation />
+    </div>
+
+    <div class="flex items-center gap-2">
+      {
+        features.search && (features.news || features.guides) && (
+          <a
+            href={href("/search/")}
+            class="inline-flex size-11 items-center justify-center rounded-md border border-border text-muted hover:border-accent hover:text-accent"
+            aria-label={t("nav.search")}
+            title={t("nav.search")}
+          >
+            <Icon name="search" />
+          </a>
+        )
+      }
+      {features.themeToggle && <ThemeToggle />}
+      {
+        discord && (
+          <a href={discord} class="btn btn-primary hidden md:inline-flex" rel="noopener noreferrer" target="_blank">
+            <Icon name="chat" size={18} />
+            {t("cta.discord")}
+          </a>
+        )
+      }
+    </div>
+  </div>
+</header>
+
+<style>
+  /* With JS the mobile menu is an overlay panel: everything stays on one row
+     and the guild name is truncated if needed. */
+  :global(.js) header .container-page {
+    flex-wrap: nowrap;
+  }
+  :global(.js) header .order-last {
+    width: auto;
+    order: 10;
+  }
+  @media (min-width: 1024px) {
+    :global(.js) header .order-last {
+      order: 0;
+    }
+  }
+</style>

@@ -1,0 +1,114 @@
+---
+// Main navigation. Desktop: inline entries. Mobile: collapsible menu with an
+// accessible button; without JavaScript the entries are always visible.
+import Icon from "./Icon.astro";
+import { navItems, t } from "../lib/navigation.js";
+import { href, isActive } from "../lib/paths.js";
+
+const items = navItems();
+const current = Astro.url.pathname;
+---
+
+<nav aria-label={t("nav.main")} class="site-nav">
+  <button
+    type="button"
+    class="js-only inline-flex size-11 items-center justify-center rounded-md border border-border text-text lg:hidden"
+    aria-expanded="false"
+    aria-controls="nav-list"
+    data-nav-toggle
+  >
+    <span class="icon-open"><Icon name="menu" size={22} /></span>
+    <span class="icon-close hidden"><Icon name="close" size={22} /></span>
+    <span class="sr-only">{t("nav.menu")}</span>
+  </button>
+
+  <ul id="nav-list" class="nav-list">
+    {
+      items.map((item) => {
+        const active = isActive(current, item.href);
+        return (
+          <li>
+            <a
+              href={href(item.href)}
+              aria-current={active ? "page" : undefined}
+              class:list={[
+                "nav-link block rounded-md px-3 py-2.5 font-semibold no-underline lg:py-2",
+                active ? "text-accent" : "text-text hover:text-accent",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>
+
+<style>
+  .nav-link[aria-current="page"] {
+    box-shadow: inset 0 -2px 0 var(--c-accent);
+  }
+
+  /* Mobile: without JS the list is shown below the header; with JS it becomes a menu. */
+  .nav-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+  :global(.js) .nav-list {
+    display: none;
+    position: absolute;
+    inset-inline: 0;
+    top: 100%;
+    flex-direction: column;
+    padding: 0.75rem 1rem 1rem;
+    background: var(--c-surface);
+    border-bottom: 1px solid var(--c-border);
+    box-shadow: 0 16px 30px -20px rgb(0 0 0 / 0.7);
+  }
+  :global(.js) .nav-list.is-open {
+    display: flex;
+  }
+
+  @media (min-width: 1024px) {
+    :global(.js) .nav-list,
+    .nav-list {
+      display: flex;
+      position: static;
+      flex-direction: row;
+      padding: 0;
+      background: none;
+      border: 0;
+      box-shadow: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-nav-toggle]").forEach((btn) => {
+    const list = document.getElementById(btn.getAttribute("aria-controls") ?? "");
+    if (!list) return;
+
+    const setOpen = (open: boolean) => {
+      btn.setAttribute("aria-expanded", String(open));
+      list.classList.toggle("is-open", open);
+      btn.querySelector(".icon-open")?.classList.toggle("hidden", open);
+      btn.querySelector(".icon-close")?.classList.toggle("hidden", !open);
+    };
+
+    btn.addEventListener("click", () => setOpen(btn.getAttribute("aria-expanded") !== "true"));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && btn.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        btn.focus();
+      }
+    });
+
+    // Close the menu when switching to the desktop layout.
+    window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+  });
+</script>

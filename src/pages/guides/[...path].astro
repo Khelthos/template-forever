@@ -1,0 +1,112 @@
+---
+// Guides: list (/guides/), category filter (/guides/category/<id>/, works
+// without JavaScript) and single guides (/guides/<file-name>/).
+import type { GetStaticPaths } from "astro";
+import { render, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import SectionHeading from "../../components/SectionHeading.astro";
+import GuideCard from "../../components/GuideCard.astro";
+import { config } from "../../lib/site-config.js";
+import { getPublished, related } from "../../lib/content.js";
+import { href } from "../../lib/paths.js";
+import { t } from "../../lib/navigation.js";
+
+export const getStaticPaths = (async () => {
+  if (!config.features.guides) return [];
+  const all = await getPublished("guides");
+  // Only categories with at least one guide get a filter.
+  const categories = config.guides.categories.filter((c) => all.some((g) => g.data.type === c.id));
+
+  return [
+    { params: { path: undefined }, props: { kind: "list" as const, entries: all, category: null, categories } },
+    ...categories.map((c) => ({
+      params: { path: `category/${c.id}` },
+      props: { kind: "list" as const, entries: all.filter((g) => g.data.type === c.id), category: c, categories },
+    })),
+    ...all.map((entry) => ({
+      params: { path: entry.id },
+      props: { kind: "article" as const, entry, related: related(entry, all) },
+    })),
+  ];
+}) satisfies GetStaticPaths;
+
+type Category = { id: string; label: string };
+type ListProps = { kind: "list"; entries: CollectionEntry<"guides">[]; category: Category | null; categories: Category[] };
+type ArticleProps = { kind: "article"; entry: CollectionEntry<"guides">; related: CollectionEntry<"guides">[] };
+const props = Astro.props as ListProps | ArticleProps;
+const rendered = props.kind === "article" ? await render(props.entry) : null;
+
+const featured = props.kind === "list" && !props.category ? props.entries.filter((g) => g.data.featured) : [];
+const rest = props.kind === "list" ? props.entries.filter((g) => !featured.includes(g)) : [];
+---
+
+{
+  props.kind === "list" ? (
+    <BaseLayout
+      title={props.category ? `${t("guides.title")}: ${props.category.label}` : t("guides.title")}
+      description={t("guides.intro")}
+    >
+      <div class="container-page py-12 lg:py-16">
+        <SectionHeading
+          level={1}
+          title={props.category ? `${t("guides.title")}: ${props.category.label}` : t("guides.title")}
+          intro={t("guides.intro")}
+        />
+
+        {props.categories.length > 1 && (
+          <nav aria-label={t("guides.categories")} class="-mt-2 mb-8">
+            <ul class="flex flex-wrap gap-2">
+              <li>
+                <a href={href("/guides/")} class="chip min-h-9 px-4" aria-current={!props.category ? "page" : undefined}>
+                  {t("guides.all")}
+                </a>
+              </li>
+              {props.categories.map((c) => (
+                <li>
+                  <a
+                    href={href(`/guides/category/${c.id}/`)}
+                    class="chip min-h-9 px-4"
+                    aria-current={props.category?.id === c.id ? "page" : undefined}
+                  >
+                    {c.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
+        {featured.length > 0 && (
+          <section aria-labelledby="featured-title" class="mb-12">
+            <h2 id="featured-title" class="mb-5 text-2xl text-text">
+              ★ {t("guides.featured")}
+            </h2>
+            <div class="grid gap-5 md:grid-cols-2">
+              {featured.map((entry) => (
+                <GuideCard entry={entry} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {featured.length > 0 && rest.length > 0 && <h2 class="mb-5 text-2xl text-text">{t("home.allGuides")}</h2>}
+        {rest.length > 0 ? (
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {rest.map((entry) => (
+              <GuideCard entry={entry} headingLevel={featured.length ? 3 : 2} />
+            ))}
+          </div>
+        ) : (
+          featured.length === 0 && <p class="panel p-6 text-muted">{t("guides.empty")}</p>
+        )}
+      </div>
+    </BaseLayout>
+  ) : (
+    rendered && (
+      <ArticleLayout kind="guides" data={props.entry.data} headings={rendered.headings} related={props.related}>
+        <rendered.Content />
+      </ArticleLayout>
+    )
+  )
+}
