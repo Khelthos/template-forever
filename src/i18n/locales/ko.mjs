@@ -92,8 +92,6 @@ export default {
   "roster.empty": "선택한 필터와 일치하는 길드원이 없습니다.",
   "roster.emptyAll": "길드원 목록이 비어 있습니다. src/data/roster.json 에 길드원을 추가하세요.",
   "roster.profile": "프로필",
-  "roster.specsNote":
-    "Blizzard는 Forever에서 아홉 직업의 특성을 모두 개편했습니다. 전문화 이름은 기존 세 가지 특성 트리를 따르며, 공식 정보가 발표되면 업데이트됩니다.",
   "role.tank": "탱커",
   "role.healer": "힐러",
   "role.dps": "딜러",

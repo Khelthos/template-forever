@@ -213,7 +213,7 @@ Jedes Mitglied in `src/data/roster.json`:
 }
 ```
 
-Pflichtfelder sind `name`, `race`, `class` und `spec`, geschrieben wie im Katalog (z. B. `"Night Elf"` oder `"night-elf"`). Die Standardrolle (`role`) ergibt sich aus der Spezialisierung; `rank` muss einer der `guild.ranks` sein. Ohne `avatar` werden Initialen angezeigt. Ungültige Volk-/Klassenkombinationen erzeugen einen Fehler, der Mitglied und Feld nennt. Die erlaubten Kombinationen stehen in [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
+Pflichtfelder sind `name`, `race`, `class` und `spec`, geschrieben wie im Katalog (z. B. `"Night Elf"` oder `"night-elf"`). Die Standardrolle (`role`) ergibt sich aus der Spezialisierung; setze `role` nur, um eine andere Rolle zu wählen, die diese Spezialisierung ausfüllen kann (z. B. Feral-Druide als DPS, Survival-Jäger oder Enhancement-Schamane als Off-Tank). `rank` muss einer der `guild.ranks` sein. Ohne `avatar` werden Initialen angezeigt. Ungültige Volk-/Klassenkombinationen erzeugen einen Fehler, der Mitglied und Feld nennt. Die erlaubten Kombinationen stehen in [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
 
 Die Namen von Völkern, Klassen und Spezialisierungen sind die englischen Spielnamen und in allen Sprachen der Vorlage gleich.
 
@@ -267,7 +267,6 @@ Auf einer eigenen Hauptdomain (z. B. `https://meine-gilde.de/`) wird der Basispf
 ## Bekannte Einschränkungen
 
 - **Blizzard-APIs:** nicht integriert. Sie benötigen serverseitige Zugangsdaten, und es wurden keine dokumentierten Endpunkte für Forever gefunden. Die Mitgliederliste wird manuell gepflegt. Details (auf Englisch) in [BLIZZARD-API.md](../BLIZZARD-API.md).
-- **Spieldaten:** Die Namen der Spezialisierungen (Talente in Forever überarbeitet) müssen noch bestätigt werden. Siehe [GAME-DATA.md](../GAME-DATA.md).
 - **Selbst gehostete Schriften:** Der Build benötigt eine Internetverbindung zum Herunterladen. Offline `fontLoading: "system"` verwenden.
 - **Eine Sprache pro Website:** Die Oberfläche nutzt jeweils eine Sprache; Besucher haben keine Sprachauswahl.
 - **Kein Online-Bewerbungsformular:** Die Rekrutierung verweist auf die konfigurierten Kontakte.

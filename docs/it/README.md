@@ -213,7 +213,7 @@ Ogni membro in `src/data/roster.json`:
 }
 ```
 
-Sono obbligatori `name`, `race`, `class` e `spec`, scritti come nel catalogo (es. `"Night Elf"` o `"night-elf"`). Il `role` predefinito deriva dalla specializzazione e il `rank` deve essere uno dei `guild.ranks`. Senza `avatar` vengono mostrate le iniziali. Combinazioni razza/classe non valide producono un errore che indica il membro e il campo. Le combinazioni ammesse sono in [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
+Sono obbligatori `name`, `race`, `class` e `spec`, scritti come nel catalogo (es. `"Night Elf"` o `"night-elf"`). Il `role` predefinito deriva dalla specializzazione; imposta `role` solo per scegliere un altro ruolo che quella specializzazione può coprire (es. un Druido Feral come DPS, un Cacciatore Survival o uno Sciamano Enhancement come off-tank). Il `rank` deve essere uno dei `guild.ranks`. Senza `avatar` vengono mostrate le iniziali. Combinazioni razza/classe non valide producono un errore che indica il membro e il campo. Le combinazioni ammesse sono in [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
 
 I nomi di razze, classi e specializzazioni sono quelli inglesi del gioco, uguali in tutte le lingue del template.
 
@@ -267,7 +267,6 @@ Su un dominio principale (es. `https://mia-gilda.it/`) il base path diventa auto
 ## Limitazioni note
 
 - **API Blizzard:** non integrate. Richiedono credenziali lato server e non risultano endpoint documentati per Forever. Il roster è manuale. Dettagli (in inglese) in [BLIZZARD-API.md](../BLIZZARD-API.md).
-- **Dati di gioco:** i nomi delle specializzazioni (talenti rielaborati in Forever) sono ancora da confermare. Vedi [GAME-DATA.md](../GAME-DATA.md).
 - **Font self-hosted:** la build richiede una connessione internet per scaricarli. Offline usa `fontLoading: "system"`.
 - **Una lingua per sito:** l'interfaccia usa una lingua alla volta; i visitatori non hanno un selettore di lingua.
 - **Nessun modulo di candidatura online:** il reclutamento rimanda ai contatti configurati.

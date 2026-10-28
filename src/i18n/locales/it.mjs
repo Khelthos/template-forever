@@ -92,8 +92,6 @@ export default {
   "roster.empty": "Nessun membro corrisponde ai filtri selezionati.",
   "roster.emptyAll": "Il roster è vuoto. Aggiungi i membri in src/data/roster.json.",
   "roster.profile": "Profilo",
-  "roster.specsNote":
-    "Blizzard ha rielaborato i talenti delle nove classi per Forever. I nomi delle specializzazioni seguono i tre alberi classici e verranno aggiornati quando saranno pubblicati i dettagli ufficiali.",
   "role.tank": "Tank",
   "role.healer": "Healer",
   "role.dps": "DPS",

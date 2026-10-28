@@ -213,7 +213,7 @@ Cada membro em `src/data/roster.json`:
 }
 ```
 
-`name`, `race`, `class` e `spec` são obrigatórios e devem ser escritos como no catálogo (ex.: `"Night Elf"` ou `"night-elf"`). A função (`role`) padrão vem da especialização; `rank` precisa ser um dos `guild.ranks`. Sem `avatar`, são exibidas as iniciais. Combinações inválidas de raça e classe geram um erro que indica o membro e o campo. As combinações permitidas estão em [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
+`name`, `race`, `class` e `spec` são obrigatórios e devem ser escritos como no catálogo (ex.: `"Night Elf"` ou `"night-elf"`). A função (`role`) padrão vem da especialização; defina `role` só para escolher outra função que essa especialização possa cumprir (ex.: um Druida Feral como DPS, um Caçador Survival ou um Xamã Enhancement como off-tank). `rank` precisa ser um dos `guild.ranks`. Sem `avatar`, são exibidas as iniciais. Combinações inválidas de raça e classe geram um erro que indica o membro e o campo. As combinações permitidas estão em [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
 
 Os nomes de raças, classes e especializações são os nomes em inglês do jogo, iguais em todos os idiomas do template.
 
@@ -267,7 +267,6 @@ Em um domínio raiz (ex.: `https://minha-guilda.com.br/`), o caminho base passa 
 ## Limitações conhecidas
 
 - **APIs da Blizzard:** não integradas. Elas exigem credenciais no servidor e não foram encontrados endpoints documentados para Forever. A lista de membros é manual. Detalhes (em inglês) em [BLIZZARD-API.md](../BLIZZARD-API.md).
-- **Dados do jogo:** os nomes das especializações (talentos reformulados em Forever) ainda precisam ser confirmados. Veja [GAME-DATA.md](../GAME-DATA.md).
 - **Fontes hospedadas no site:** o build precisa de internet para baixá-las. Sem conexão, use `fontLoading: "system"`.
 - **Um idioma por site:** a interface usa um idioma por vez; os visitantes não têm seletor de idioma.
 - **Sem formulário de candidatura online:** o recrutamento aponta para o contato configurado.

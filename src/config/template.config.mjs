@@ -6,5 +6,5 @@
 export default {
   name: "Azeroth Guild Template",
   repositoryUrl: "https://github.com/Khelthos/template-forever",
-  version: "1.0.0",
+  version: "1.0.1",
 };

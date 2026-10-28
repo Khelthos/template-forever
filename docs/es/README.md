@@ -213,7 +213,7 @@ Cada miembro en `src/data/roster.json`:
 }
 ```
 
-Son obligatorios `name`, `race`, `class` y `spec`, escritos como en el catálogo (p. ej. `"Night Elf"` o `"night-elf"`). El `role` predeterminado depende de la especialización y `rank` debe ser uno de `guild.ranks`. Sin `avatar` se muestran las iniciales. Una combinación de raza y clase no válida produce un error que indica el miembro y el campo. Las combinaciones permitidas están en [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
+Son obligatorios `name`, `race`, `class` y `spec`, escritos como en el catálogo (p. ej. `"Night Elf"` o `"night-elf"`). El `role` predeterminado depende de la especialización; indica `role` solo para elegir otro rol que esa especialización pueda cubrir (p. ej. un Druida Feral como DPS, un Cazador Survival o un Chamán Enhancement como off-tank). `rank` debe ser uno de `guild.ranks`. Sin `avatar` se muestran las iniciales. Una combinación de raza y clase no válida produce un error que indica el miembro y el campo. Las combinaciones permitidas están en [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
 
 Los nombres de razas, clases y especializaciones son los nombres en inglés del juego, iguales en todos los idiomas de la plantilla.
 
@@ -267,7 +267,6 @@ En un dominio raíz (p. ej. `https://mi-hermandad.es/`) la ruta base pasa a ser 
 ## Limitaciones conocidas
 
 - **API de Blizzard:** no integradas. Requieren credenciales en el servidor y no se han encontrado endpoints documentados para Forever. La lista de miembros es manual. Detalles (en inglés) en [BLIZZARD-API.md](../BLIZZARD-API.md).
-- **Datos del juego:** los nombres de las especializaciones (talentos rediseñados en Forever) están pendientes de confirmar. Consulta [GAME-DATA.md](../GAME-DATA.md).
 - **Fuentes alojadas en el sitio:** el build necesita conexión a internet para descargarlas. Sin conexión, usa `fontLoading: "system"`.
 - **Un idioma por sitio:** la interfaz usa un idioma a la vez; los visitantes no tienen selector de idioma.
 - **Sin formulario de solicitud en línea:** el reclutamiento remite al contacto configurado.

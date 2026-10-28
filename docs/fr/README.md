@@ -213,7 +213,7 @@ Chaque membre dans `src/data/roster.json` :
 }
 ```
 
-`name`, `race`, `class` et `spec` sont obligatoires, écrits comme dans le catalogue (p. ex. `"Night Elf"` ou `"night-elf"`). Le `role` par défaut découle de la spécialisation ; `rank` doit faire partie de `guild.ranks`. Sans `avatar`, les initiales sont affichées. Une combinaison race/classe invalide produit une erreur indiquant le membre et le champ. Les combinaisons autorisées figurent dans [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
+`name`, `race`, `class` et `spec` sont obligatoires, écrits comme dans le catalogue (p. ex. `"Night Elf"` ou `"night-elf"`). Le `role` par défaut découle de la spécialisation ; ne renseignez `role` que pour choisir un autre rôle que cette spécialisation peut tenir (p. ex. un Druide Feral en DPS, un Chasseur Survival ou un Chaman Enhancement en off-tank). `rank` doit faire partie de `guild.ranks`. Sans `avatar`, les initiales sont affichées. Une combinaison race/classe invalide produit une erreur indiquant le membre et le champ. Les combinaisons autorisées figurent dans [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations).
 
 Les noms de races, classes et spécialisations sont les noms anglais du jeu, identiques dans toutes les langues du modèle.
 
@@ -267,7 +267,6 @@ Sur un domaine racine (p. ex. `https://ma-guilde.fr/`), le chemin de base devien
 ## Limites connues
 
 - **API Blizzard :** non intégrées. Elles nécessitent des identifiants côté serveur et aucun point d’accès documenté pour Forever n’a été trouvé. La liste des membres est manuelle. Détails (en anglais) dans [BLIZZARD-API.md](../BLIZZARD-API.md).
-- **Données de jeu :** les noms des spécialisations (talents retravaillés dans Forever) restent à confirmer. Voir [GAME-DATA.md](../GAME-DATA.md).
 - **Polices auto-hébergées :** le build a besoin d’une connexion internet pour les télécharger. Hors ligne, utilisez `fontLoading: "system"`.
 - **Une langue par site :** l’interface utilise une seule langue à la fois ; les visiteurs n’ont pas de sélecteur de langue.
 - **Pas de formulaire de candidature en ligne :** le recrutement renvoie aux contacts configurés.

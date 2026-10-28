@@ -213,7 +213,7 @@ tags:
 }
 ```
 
-`name`、`race`、`class`、`spec` 為必填，寫法須與目錄一致（例如 `"Night Elf"` 或 `"night-elf"`）。預設 `role` 由專精決定，`rank` 必須是 `guild.ranks` 之一。沒有 `avatar` 時會顯示名字縮寫。無效的種族/職業組合會產生錯誤，並指出對應的成員與欄位。可用的組合列於 [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations)。
+`name`、`race`、`class`、`spec` 為必填，寫法須與目錄一致（例如 `"Night Elf"` 或 `"night-elf"`）。預設 `role` 由專精決定；只有在選擇該專精可擔任的其他職責時才填寫 `role`（例如 Feral 德魯伊擔任 DPS，Survival 獵人或 Enhancement 薩滿擔任副坦）。`rank` 必須是 `guild.ranks` 之一。沒有 `avatar` 時會顯示名字縮寫。無效的種族/職業組合會產生錯誤，並指出對應的成員與欄位。可用的組合列於 [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations)。
 
 種族、職業與專精名稱使用遊戲的英文名稱，在範本的所有語言中都相同。
 
@@ -267,7 +267,6 @@ tags:
 ## 已知限制
 
 - **暴雪 API：**未串接。它們需要伺服器端憑證，且未找到針對 Forever 的文件化端點。成員列表需手動維護。詳情（英文）請見 [BLIZZARD-API.md](../BLIZZARD-API.md)。
-- **遊戲資料：**專精名稱（Forever 已重新設計天賦）仍待確認。請見 [GAME-DATA.md](../GAME-DATA.md)。
 - **自行託管字型：**建置時需要網路連線下載字型。離線時請使用 `fontLoading: "system"`。
 - **每個網站一種語言：**介面一次只使用一種語言，訪客沒有語言切換器。
 - **沒有線上申請表：**招募會引導至已設定的聯絡方式。

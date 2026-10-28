@@ -213,7 +213,7 @@ Each member in `src/data/roster.json`:
 }
 ```
 
-`name`, `race`, `class` and `spec` are required, written as in the catalog (e.g. `"Night Elf"` or `"night-elf"`). The default `role` comes from the specialization; `rank` must be one of `guild.ranks`. Without `avatar`, initials are shown. Invalid race/class combinations produce an error naming the member and the field: the allowed combinations are listed in [docs/GAME-DATA.md](docs/GAME-DATA.md#raceclass-combinations).
+`name`, `race`, `class` and `spec` are required, written as in the catalog (e.g. `"Night Elf"` or `"night-elf"`). The default `role` comes from the specialization; set `role` only to change it to another role that specialization can fill (e.g. a Feral Druid as DPS, a Survival Hunter or Enhancement Shaman as off-tank). `rank` must be one of `guild.ranks`. Without `avatar`, initials are shown. Invalid race/class combinations produce an error naming the member and the field: the allowed combinations are listed in [docs/GAME-DATA.md](docs/GAME-DATA.md#raceclass-combinations).
 
 Race, class and specialization names are the English game names, as used across all localized versions of the template.
 
@@ -292,7 +292,6 @@ Main choices:
 ## Known limitations
 
 - **Blizzard APIs:** not integrated. They require server-side credentials and no documented endpoints for Forever were found. The roster is manual. Details in [docs/BLIZZARD-API.md](docs/BLIZZARD-API.md).
-- **Game data:** the specialization names (talents reworked in Forever) are still to be confirmed. See [docs/GAME-DATA.md](docs/GAME-DATA.md).
 - **Self-hosted fonts:** the build needs an internet connection to download them. Offline, use `fontLoading: "system"`.
 - **Single language per site:** the interface uses one language at a time; there is no language switcher for visitors.
 - **No online application form:** recruitment points to the configured contacts.

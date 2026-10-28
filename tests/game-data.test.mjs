@@ -17,8 +17,35 @@ test("the game catalog is consistent", () => {
   }
   for (const cls of gameData.classes) {
     assert.match(cls.color, /^#[0-9A-F]{6}$/i);
-    for (const s of cls.specs) assert.ok(roleIds.includes(s.role), `${cls.id}/${s.id}`);
+    for (const s of cls.specs) {
+      assert.ok(roleIds.includes(s.role), `${cls.id}/${s.id}`);
+      if (s.roles) {
+        assert.ok(s.roles.includes(s.role), `${cls.id}/${s.id}: default role in roles`);
+        for (const r of s.roles) assert.ok(roleIds.includes(r), `${cls.id}/${s.id}: ${r}`);
+      }
+    }
   }
+});
+
+test("specializations match the official Forever list", () => {
+  const expected = {
+    warrior: ["Arms", "Fury", "Protection"],
+    hunter: ["Beast Mastery", "Marksmanship", "Survival"],
+    mage: ["Arcane", "Fire", "Frost"],
+    paladin: ["Holy", "Protection", "Retribution"],
+    priest: ["Discipline", "Holy", "Shadow"],
+    rogue: ["Assassination", "Combat", "Subtlety"],
+    shaman: ["Elemental", "Enhancement", "Restoration"],
+    warlock: ["Affliction", "Demonology", "Destruction"],
+    druid: ["Balance", "Feral", "Restoration"],
+  };
+  for (const cls of gameData.classes) {
+    assert.deepEqual(cls.specs.map((s) => s.name), expected[cls.id], cls.id);
+  }
+  const spec = (c, s) => gameData.classes.find((x) => x.id === c).specs.find((x) => x.id === s);
+  assert.deepEqual(spec("druid", "feral").roles, ["tank", "dps"]);
+  assert.deepEqual(spec("hunter", "survival").roles, ["dps", "tank"]);
+  assert.deepEqual(spec("shaman", "enhancement").roles, ["dps", "tank"]);
 });
 
 test("playable races match Forever: four per faction plus the neutral Skyborne", () => {

@@ -92,7 +92,6 @@ export default {
   "roster.empty": "沒有符合所選篩選條件的成員。",
   "roster.emptyAll": "成員列表是空的。請在 src/data/roster.json 中新增成員。",
   "roster.profile": "個人資料",
-  "roster.specsNote": "暴雪已為 Forever 重新設計全部九個職業的天賦。專精名稱暫沿用經典的三系天賦樹，官方資訊公布後將會更新。",
   "role.tank": "坦克",
   "role.healer": "治療",
   "role.dps": "輸出",

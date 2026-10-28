@@ -59,7 +59,11 @@ export interface GuildConfig {
 export interface Spec {
   id: string;
   name: string;
+  aliases?: string[];
+  /** Default role. */
   role: RoleId;
+  /** Every role the spec can fill, when more than the default (e.g. off-tanking). */
+  roles?: RoleId[];
 }
 
 export interface GameClass {

@@ -13,7 +13,8 @@ Race, class and specialization names are the English game names in every interfa
 | New combinations: Human Hunter, Gnome Priest, Dwarf Shaman, Troll Warlock, Orc Mage, Undead Paladin | Official | Blizzard News |
 | Race/class combinations for the classic races | Consistent with the number of classes per race in the official table | Blizzard News |
 | Classes of the two Skyborne races (High Order: Warrior, Hunter, Rogue, Mage, Druid; Windshaper: Warrior, Hunter, Rogue, Shaman, Druid) | Official | Blizzard News, Icy Veins |
-| Specialization names | **To be confirmed** (`specsStatus: "unconfirmed"`) | Blizzard reworked the talents: the three classic trees are used for now |
+| Specializations: three per class, with the classic names (Druid Feral is also accepted as "Feral (Combat)") | Official | Blizzard reworked the talents inside each specialization, the names are unchanged |
+| Specializations that can off-tank: Druid Feral (Bear Form, default Tank, also DPS), Hunter Survival and Shaman Enhancement (default DPS, also Tank) | Official | `roles` field of the specialization |
 
 ### Races and starting zones
 
@@ -59,6 +60,6 @@ Races from other versions of WoW (Draenei, Worgen, Blood Elf, Goblin, Pandaren..
 
 - **New combination:** add the class id to the race's `classes` list.
 - **New race:** add an object in `races` (`id` lowercase with hyphens, `name`, `faction`, `startingZone`, `classes`; optional `aliases` and `group` for a neutral race's faction variant). For a dedicated palette add an entry with the same `id` in `src/data/palettes.mjs`; a test checks that every race has one.
-- **Confirmed specializations:** update the class `specs` and set `"specsStatus": "official"` to hide the note on the roster page.
+- **Specializations:** each entry in a class `specs` has `id`, `name`, a default `role` and, when it can fill more than one, `roles` (e.g. `["dps", "tank"]`). In `roster.json` a member's `role` overrides the default only if it is in `roles`; otherwise `npm run check:content` warns and the default is used.
 
 After every change run `npm run check:content` and `npm test`.

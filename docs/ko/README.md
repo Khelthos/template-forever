@@ -213,7 +213,7 @@ tags:
 }
 ```
 
-`name`, `race`, `class`, `spec`은 필수이며 카탈로그와 같은 방식으로 씁니다(예: `"Night Elf"` 또는 `"night-elf"`). 기본 `role`은 전문화에 따라 정해지고, `rank`는 `guild.ranks` 중 하나여야 합니다. `avatar`가 없으면 이름 머리글자가 표시됩니다. 불가능한 종족/직업 조합은 해당 길드원과 항목을 알려 주는 오류가 됩니다. 가능한 조합은 [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations)에 정리되어 있습니다.
+`name`, `race`, `class`, `spec`은 필수이며 카탈로그와 같은 방식으로 씁니다(예: `"Night Elf"` 또는 `"night-elf"`). 기본 `role`은 전문화에 따라 정해집니다. `role`은 해당 전문화가 맡을 수 있는 다른 역할을 고를 때만 지정합니다(예: Feral 드루이드를 DPS로, Survival 사냥꾼이나 Enhancement 주술사를 보조 탱커로). `rank`는 `guild.ranks` 중 하나여야 합니다. `avatar`가 없으면 이름 머리글자가 표시됩니다. 불가능한 종족/직업 조합은 해당 길드원과 항목을 알려 주는 오류가 됩니다. 가능한 조합은 [GAME-DATA.md](../GAME-DATA.md#raceclass-combinations)에 정리되어 있습니다.
 
 종족, 직업, 전문화 이름은 게임의 영어 이름이며 템플릿의 모든 언어에서 같습니다.
 
@@ -267,7 +267,6 @@ tags:
 ## 알려진 제한 사항
 
 - **Blizzard API:** 연동하지 않았습니다. 서버 측 자격 증명이 필요하고 Forever용으로 문서화된 엔드포인트를 찾지 못했습니다. 길드원 목록은 직접 관리합니다. 자세한 내용(영어)은 [BLIZZARD-API.md](../BLIZZARD-API.md)를 참고하세요.
-- **게임 데이터:** 전문화 이름(Forever에서 특성 개편)은 아직 확인이 필요합니다. [GAME-DATA.md](../GAME-DATA.md)를 참고하세요.
 - **직접 호스팅 글꼴:** 빌드할 때 글꼴을 내려받으려면 인터넷 연결이 필요합니다. 오프라인에서는 `fontLoading: "system"`을 사용하세요.
 - **사이트당 한 언어:** 인터페이스는 한 번에 한 언어만 사용하며 방문자용 언어 선택 기능은 없습니다.
 - **온라인 가입 신청서 없음:** 모집은 설정한 연락처로 안내합니다.

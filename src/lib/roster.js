@@ -65,7 +65,12 @@ export function normalizeRoster(raw, guild) {
     let role = spec.role;
     if (m.role) {
       const r = findRole(m.role);
-      if (r) role = r.id;
+      if (r && (spec.roles ?? [spec.role]).includes(r.id)) role = r.id;
+      else if (r)
+        warnings.push({
+          path: at("role"),
+          message: `${cls.name} ${spec.name} cannot play as ${r.name} (${(spec.roles ?? [spec.role]).join(", ")}): using "${spec.role}"`,
+        });
       else warnings.push({ path: at("role"), message: `unknown role "${m.role}" (tank, healer, dps): using "${spec.role}"` });
     }
 

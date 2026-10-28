@@ -32,6 +32,21 @@ test("the default role comes from the specialization", () => {
   assert.equal(members[0].role, "tank");
 });
 
+test("a role override must be one the specialization can fill", () => {
+  const druid = { ...base, race: "Night Elf", class: "Druid" };
+  const { members, warnings } = normalizeRoster(
+    [
+      { ...druid, name: "Cat", spec: "Feral (Combat)", role: "DPS" },
+      { ...druid, name: "Tree", spec: "Restoration", role: "Tank" },
+    ],
+    guild,
+  );
+  assert.equal(members.find((m) => m.name === "Cat").role, "dps");
+  assert.equal(members.find((m) => m.name === "Tree").role, "healer");
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0].message, /Restoration cannot play as Tank/);
+});
+
 test("clear errors for invalid data", () => {
   const cases = [
     [{ ...base, name: "" }, /name/],

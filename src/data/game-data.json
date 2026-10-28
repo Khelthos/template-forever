@@ -1,5 +1,5 @@
 {
-  "$comment": "Game catalog for World of Warcraft: Forever. Edit it when Blizzard adds races, classes or combinations. 'status' tells how reliable an entry is: 'official' = verified on news.blizzard.com; 'unconfirmed' = third-party source or still to be confirmed. See docs/GAME-DATA.md for sources.",
+  "$comment": "Game catalog for World of Warcraft: Forever. Edit it when Blizzard adds races, classes or combinations. 'status' tells how reliable an entry is: 'official' = confirmed for Forever; 'unconfirmed' = third-party source or still to be confirmed. A spec's 'role' is the default; 'roles' lists every role it can fill (e.g. off-tanking). See docs/GAME-DATA.md for sources.",
   "sources": [
     {
       "label": "Blizzard News — Create the Hero You Want to Be in World of Warcraft: Forever",
@@ -26,7 +26,7 @@
       "id": "druid", "name": "Druid", "color": "#FF7C0A",
       "specs": [
         { "id": "balance", "name": "Balance", "role": "dps" },
-        { "id": "feral", "name": "Feral", "role": "tank" },
+        { "id": "feral", "name": "Feral", "aliases": ["Feral (Combat)", "Feral Combat"], "role": "tank", "roles": ["tank", "dps"] },
         { "id": "restoration", "name": "Restoration", "role": "healer" }
       ]
     },
@@ -35,7 +35,7 @@
       "specs": [
         { "id": "beast-mastery", "name": "Beast Mastery", "role": "dps" },
         { "id": "marksmanship", "name": "Marksmanship", "role": "dps" },
-        { "id": "survival", "name": "Survival", "role": "dps" }
+        { "id": "survival", "name": "Survival", "role": "dps", "roles": ["dps", "tank"] }
       ]
     },
     {
@@ -74,7 +74,7 @@
       "id": "shaman", "name": "Shaman", "color": "#0070DD",
       "specs": [
         { "id": "elemental", "name": "Elemental", "role": "dps" },
-        { "id": "enhancement", "name": "Enhancement", "role": "dps" },
+        { "id": "enhancement", "name": "Enhancement", "role": "dps", "roles": ["dps", "tank"] },
         { "id": "restoration", "name": "Restoration", "role": "healer" }
       ]
     },
@@ -95,8 +95,6 @@
       ]
     }
   ],
-  "specsStatus": "unconfirmed",
-  "specsNote": "Blizzard reworked the talents of all nine classes for Forever. Specialization names follow the three classic trees and must be confirmed once official details are published. The note shown on the site is translated in src/i18n/locales (key roster.specsNote).",
   "raceGroups": [
     {
       "id": "skyborne", "name": "Skyborne", "neutral": true, "startingZone": "Zephras Isle",

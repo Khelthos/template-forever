@@ -1,6 +1,6 @@
 {
   "name": "azeroth-guild-template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Free static website template for World of Warcraft: Forever guilds, built with Astro and Tailwind CSS.",
   "type": "module",
